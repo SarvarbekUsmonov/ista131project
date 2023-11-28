@@ -1,38 +1,58 @@
-# First Data
+import pandas as pd
 import matplotlib.pyplot as plt
-avg_views_per_country = {}
+import seaborn as sns
+import numpy as np
+import json
+from datetime import datetime
+
+# Function to load and extract category names from JSON
+def load_and_extract_category_names(file_path):
+    with open(file_path, 'r') as file:
+        category_data = json.load(file)
+    category_names = {int(item['id']): item['snippet']['title'] for item in category_data['items']}
+    return category_names
+
+# Loading datasets
+ca_videos = pd.read_csv('CAvideos.csv')
+de_videos = pd.read_csv('DEvideos.csv')
+gb_videos = pd.read_csv('GBvideos.csv')
+us_videos = pd.read_csv('USvideos.csv')
+
+# Loading category names
+ca_categories = load_and_extract_category_names('CA_category_id.json')
+de_categories = load_and_extract_category_names('DE_category_id.json')
+gb_categories = load_and_extract_category_names('GB_category_id.json')
+us_categories = load_and_extract_category_names('US_category_id.json')
+
+# Merging categories with videos data
+ca_videos['category'] = ca_videos['category_id'].map(ca_categories)
+de_videos['category'] = de_videos['category_id'].map(de_categories)
+gb_videos['category'] = gb_videos['category_id'].map(gb_categories)
+us_videos['category'] = us_videos['category_id'].map(us_categories)
+
+# Visualization 1: Comparison of Average Views by Category Across Countries
+selected_countries = {
+    "Canada": ca_videos,
+    "Germany": de_videos,
+    "Great Britain": gb_videos,
+    "United States": us_videos
+}
+
+plt.figure(figsize=(15, 10))
 for country, data in selected_countries.items():
     avg_views = data.groupby('category')['views'].mean()
-    avg_views_per_country[country] = avg_views
-
-# Creating the visualization
-plt.figure(figsize=(15, 10))
-
-# Plotting average views by category for each country
-for country, avg_views in avg_views_per_country.items():
     sns.barplot(x=avg_views.index, y=avg_views.values, label=country)
-
 plt.xticks(rotation=90)
 plt.xlabel('Category')
 plt.ylabel('Average Views')
 plt.title('Comparison of Average Views by Category Across Countries')
 plt.legend(title='Country')
 plt.tight_layout()
-
-# Showing the plot
 plt.show()
 
-# Second data 
-def correct_date_format(date_str):
-    return datetime.strptime(date_str, "%y.%d.%m") if '.' in date_str else datetime.strptime(date_str, "%Y-%m-%d")
-
-us_videos['trending_date'] = us_videos['trending_date'].apply(correct_date_format)
-
-# Calculating the duration for which each video remains trending
-us_videos['trending_duration'] = us_videos.groupby('video_id')['trending_date'].transform(lambda x: x.max() - x.min())
-us_videos['trending_duration'] = us_videos['trending_duration'].dt.days
-
-# Creating the histogram for trending duration
+# Visualization 2: Trending Duration Analysis in the United States
+us_videos['trending_date'] = pd.to_datetime(us_videos['trending_date'], format='%y.%d.%m')
+us_videos['trending_duration'] = us_videos.groupby('video_id')['trending_date'].transform(lambda x: x.max() - x.min()).dt.days
 plt.figure(figsize=(15, 8))
 sns.histplot(us_videos['trending_duration'], bins=30, kde=True)
 plt.xlabel('Duration in Trending (Days)')
@@ -40,26 +60,14 @@ plt.ylabel('Frequency')
 plt.title('Trending Duration Analysis in the United States')
 plt.show()
 
-# Third Data
-# Applying a log transformation to both 'views' and 'likes' for better visualization
-
-import numpy as np
-
-# Filtering out rows where views or likes are zero to avoid issues with log transformation
-filtered_us_videos = us_videos[(us_videos['views'] > 0) & (us_videos['likes'] > 0)]
-
-# Applying log transformation
-filtered_us_videos['log_views'] = np.log(filtered_us_videos['views'])
-filtered_us_videos['log_likes'] = np.log(filtered_us_videos['likes'])
-
-# Creating the scatter plot with log-transformed values
+# Visualization 3: Correlation Between Likes and Views in the United States (Log Transformed)
+us_videos_filtered = us_videos[(us_videos['views'] > 0) & (us_videos['likes'] > 0)]
+us_videos_filtered['log_views'] = np.log(us_videos_filtered['views'])
+us_videos_filtered['log_likes'] = np.log(us_videos_filtered['likes'])
 plt.figure(figsize=(15, 8))
-sns.scatterplot(x='log_views', y='log_likes', data=filtered_us_videos)
+sns.scatterplot(x='log_views', y='log_likes', data=us_videos_filtered)
+sns.regplot(x='log_views', y='log_likes', data=us_videos_filtered, scatter=False, color='red')
 plt.xlabel('Log of Views')
 plt.ylabel('Log of Likes')
 plt.title('Correlation Between Likes and Views in the United States (Log Transformed)')
-
-# Adding a regression line to the scatter plot
-sns.regplot(x='log_views', y='log_likes', data=filtered_us_videos, scatter=False, color='red')
-
 plt.show()
