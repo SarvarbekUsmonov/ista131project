@@ -3,8 +3,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from matplotlib.ticker import FuncFormatter
 
-# Load the dataset
-us_videos_path = 'USvideos.csv'  # Make sure this path is correct
+us_videos_path = 'USvideos.csv'
 us_videos_df = pd.read_csv(us_videos_path)
 
 # Convert 'publish_time' to datetime and extract the day of the week
