@@ -3,14 +3,9 @@ import seaborn as sns
 import pandas as pd
 import numpy as np
 
-# Load the dataset
+
 us_videos = pd.read_csv('USvideos.csv')
-
-# Clean the dataset by removing any potential outliers or erroneous data
-# Assuming that videos with extremely low views and likes are not relevant for the trend analysis
 us_videos_clean = us_videos[(us_videos['views'] > 0) & (us_videos['comment_count'] > 0)]
-
-# Set up the matplotlib figure
 plt.figure(figsize=(12, 6))
 
 # Draw the scatter plot using log scale for both axes to better visualize the distribution
