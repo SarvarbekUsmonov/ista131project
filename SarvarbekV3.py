@@ -2,7 +2,6 @@ import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
 
-# Load the dataset
 us_videos_path = 'USvideos.csv'
 us_videos_df = pd.read_csv(us_videos_path)
 
