@@ -50,7 +50,7 @@ plt.legend(title='Country')
 plt.tight_layout()
 plt.show()
 
-# Visualization 2: Trending Duration Analysis in the United States
+# Visualization 2: TrendingDuration Analysis in the United States
 us_videos['trending_date'] = pd.to_datetime(us_videos['trending_date'], format='%y.%d.%m')
 us_videos['trending_duration'] = us_videos.groupby('video_id')['trending_date'].transform(lambda x: x.max() - x.min()).dt.days
 plt.figure(figsize=(15, 8))
