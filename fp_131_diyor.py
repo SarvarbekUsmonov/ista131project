@@ -11,7 +11,7 @@ def load_and_extract_category_names(file_path):
     category_names = {int(item['id']): item['snippet']['title'] for item in category_data['items']}
     return category_names
 
-# Loading datasets
+# Loading dataset
 ca_videos = pd.read_csv('CAvideos.csv')
 us_videos = pd.read_csv('USvideos.csv')
 
