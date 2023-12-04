@@ -24,7 +24,7 @@ ca_videos['category'] = ca_videos['category_id'].map(ca_categories)
 us_videos['category'] = us_videos['category_id'].map(us_categories)
 
 
-# # Load the data
+# # Loading the data
 # ca_videos = pd.read_csv('CAvideos.csv')
 # us_videos = pd.read_csv('USvideos.csv')
 
