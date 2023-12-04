@@ -5,7 +5,7 @@ import numpy as np
 import json
 from datetime import datetime
 
-# Function to load and extract category names from JSON
+# Function to load and extract category names from JSON file
 def load_and_extract_category_names(file_path):
     with open(file_path, 'r') as file:
         category_data = json.load(file)
