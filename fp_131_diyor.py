@@ -45,7 +45,7 @@ plt.ylabel('Channel')
 plt.title('Top 10 Most Popular Channels by Average Views in the United States')
 plt.show()
 
-# Histogram for US data - Dislikes to Likes Ratio Analysis
+# Histogram for the US data - Dislikes to Likes Ratio Analysis
 us_videos['dislikes_to_likes_ratio'] = us_videos['dislikes'] / us_videos['likes']
 plt.figure(figsize=(12, 8))
 sns.histplot(us_videos['dislikes_to_likes_ratio'].dropna(), bins=30, kde=True, color='teal')
