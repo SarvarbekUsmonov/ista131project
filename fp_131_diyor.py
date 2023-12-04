@@ -19,7 +19,7 @@ us_videos = pd.read_csv('USvideos.csv')
 ca_categories = load_and_extract_category_names('CA_category_id.json')
 us_categories = load_and_extract_category_names('US_category_id.json')
 
-# Merging categories with videos data
+# Merging categories with videos info
 ca_videos['category'] = ca_videos['category_id'].map(ca_categories)
 us_videos['category'] = us_videos['category_id'].map(us_categories)
 
